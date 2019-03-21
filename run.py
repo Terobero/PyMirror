@@ -1,3 +1,3 @@
-execfile("para.py")
+execfile("money.py")
 print("s")
-execfile("haberler.py")
+execfile("news.py")

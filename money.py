@@ -2,13 +2,12 @@
 # encoding: utf-8
 import urllib2,cookielib
 import bs4 as bs
-import random
-from time import sleep
+from datetime import datetime
 
-d_site = "https://www.google.com.tr/search?q=1+usd+to+try&oq=1+usd+to+try&aqs=chrome..69i57.1655j0j1&sourceid=chrome&ie=UTF-8"
-e_site = "https://www.google.com.tr/search?q=1+euro+to+try&oq=1+euro+to+try&aqs=chrome..69i57.1639j0j1&sourceid=chrome&ie=UTF-8"
-p_site = "https://www.google.com.tr/search?q=1+gbp+to+try&oq=1+gbp+to+try&aqs=chrome..69i57.2388j0j1&sourceid=chrome&ie=UTF-8"
-c_site = "https://www.google.com.tr/search?q=1+cad+to+try&oq=1+cad+to+try&aqs=chrome..69i57.2198j0j9&sourceid=chrome&ie=UTF-8"
+d_site = "https://www.google.com.tr/search?q=1+usd+to+try&oq=1+usd+to+try"
+e_site = "https://www.google.com.tr/search?q=1+euro+to+try&oq=1+euro+to+try"
+p_site = "https://www.google.com.tr/search?q=1+pound+to+try&oq=1+pound+to+try"
+c_site = "https://www.google.com.tr/search?q=1+cad+to+try&oq=1+cad+to+try"
 
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -27,7 +26,10 @@ try:
     p_page = urllib2.urlopen(p_req)
     c_page = urllib2.urlopen(c_req)
 except urllib2.HTTPError, e:
-    print "Sorry, the page is down, please contact Kaan."
+    print "Failed to update MONEY on " + str(datetime.now())
+    quit()
+
+file = open("money.txt", "w")
 
 d_content = d_page.read()
 d_soup = bs.BeautifulSoup(d_content, "lxml")
@@ -39,13 +41,10 @@ c_content = c_page.read()
 c_soup = bs.BeautifulSoup(c_content, "lxml")
 
 
+dollar = round(float(str(d_soup.find(class_="dDoNo").find(class_="DFlfde").get("data-value"))),2)
+euro = round(float(str(e_soup.find(class_="dDoNo").find(class_="DFlfde").get("data-value"))),2)
+pound = round(float(str(p_soup.find(class_="dDoNo").find(class_="DFlfde").get("data-value"))),2)
+cad = round(float(str(c_soup.find(class_="dDoNo").find(class_="DFlfde").get("data-value"))),2)
 
-dollar = round(float(str(d_soup.find(class_="dDoNo vk_bk"))[25:-20]),2)
-euro = round(float(str(e_soup.find(class_="dDoNo vk_bk"))[25:-20]),2)
-pound = round(float(str(p_soup.find(class_="dDoNo vk_bk"))[25:-20]),2)
-cad = round(float(str(c_soup.find(class_="dDoNo vk_bk"))[25:-20]),2)
-
-print("USD: " + str(dollar))
-print("EUR: " + str(euro))
-print("GBP: " + str(pound))
-print("CAD: " + str(cad))
+file.write(str(dollar) + "|" + str(euro) + "|" + str(pound) + "|" + str(cad))
+file.close()

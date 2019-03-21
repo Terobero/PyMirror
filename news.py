@@ -2,10 +2,10 @@
 # encoding: utf-8
 import urllib2,cookielib
 import bs4 as bs
-import random
-from time import sleep
+from datetime import datetime
 
-site= "http://www.gazetevatan.com/rss/gundem.xml"
+#Anadolu Ajansı
+site= "https://www.aa.com.tr/tr/rss/default?cat=guncel"
 hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.64 Safari/537.11',
        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
        'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
@@ -13,28 +13,29 @@ hdr = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.11 (KHTML,
 
 req = urllib2.Request(site, headers=hdr)
 
+
 try:
     page = urllib2.urlopen(req)
 except urllib2.HTTPError, e:
-    print "Sorry, the page is down, please contact Kaan."
+    print "Failed to update NEWS on " + str(datetime.now())
+    quit()
+
+file = open("news.txt", "w")
 
 content = page.read()
 soup = bs.BeautifulSoup(content, "lxml")
 
 
-news = soup.find_all("item")
+news = soup.find_all("title")
 altered_news = []
 
-#This is to remove clickbaits
+#This is to remove clickbaits & non-news
 for new in news:
-    new = new.title
-    if "?" not in str(new) and "..." not in str(new):
-        altered_news.append(new)
+    if "?" not in str(new) and "..." not in str(new) and "60 saniyede bugün" not in str(new) and "Anadolu Ajansı Güncel Haberler" not in str(new):
+        altered_news.append(str(new)[7:-8])
 
 for new in altered_news:
-    new = str(new)[20:-15]
+    file.write(new)
+    file.write("\n")
 
-while True:
-    print str(altered_news[random.randint(0, len(altered_news)-1)])[20:-15]
-    print
-    sleep(2)
+file.close()
