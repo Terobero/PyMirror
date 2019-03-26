@@ -1,26 +1,11 @@
+#!/usr/bin/python
+# encoding: utf-8
 import pygame
+from colors import *
+from sites import *
+
 
 pygame.init()
-
-RED = pygame.Color("#FF0000")
-WHITE = pygame.Color("#FFFFFF")
-CYAN = pygame.Color("#00FFFF")
-SILVER = pygame.Color("#C0C0C0")
-BLUE = pygame.Color("#0000FF")
-GRAY = pygame.Color("#808080")
-DARKBLUE = pygame.Color("#0000A0")
-BLACK = pygame.Color("#000000")
-LIGHTBLUE = pygame.Color("#ADD8E6")
-ORANGE = pygame.Color("#FFA500")
-PURPLE = pygame.Color("#800080")
-BROWN = pygame.Color("#A52A2A")
-YELLOW = pygame.Color("#FFFF00")
-MAROON = pygame.Color("#800000")
-LIME = pygame.Color("#00FF00")
-GREEN = pygame.Color("#008000")
-MAGENTA = pygame.Color("#FF00FF")
-OLIVE = pygame.Color("#808000")
-
 
 size = (400, 500)
 screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
